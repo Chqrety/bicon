@@ -25,7 +25,7 @@ export default function FlippingText() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="flex font-bold text-9xl"
+      className="flex font-bold text-8xl md:text-9xl"
     >
       {text.map((char, index) => (
         <motion.span

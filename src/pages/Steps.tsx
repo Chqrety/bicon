@@ -150,7 +150,7 @@ function Steps() {
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen gap-5 ">
-        <div className="flex flex-col items-center gap-2 text-primary">
+        <div className="flex flex-col items-center gap-2 px-10 text-primary">
           <FlippingText />
           <motion.p
             initial={{ opacity: 0, y: 100 }}
@@ -164,6 +164,7 @@ function Steps() {
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.5 }}
+            className="text-sm text-center md:text-base"
           >
             is a simple website to convert between Binary, Decimal, Octal,
             Hexadecimal, and Text
@@ -180,18 +181,18 @@ function Steps() {
         </motion.div>
       </div>
       <div className="flex flex-col min-h-[70vh] items-center" id="convert">
-        <div className="flex flex-col items-center justify-center w-full max-w-screen-xl py-20 bg-[#FBFBFB] rounded-xl">
+        <div className="flex flex-col items-center justify-center w-full max-w-sm md:max-w-screen-xl py-20 bg-[#FBFBFB] rounded-xl">
           <p className="mb-10 text-lg font-semibold text-center">
             What you want to convert?
           </p>
-          <div className="flex items-start gap-5">
+          <div className="flex flex-col items-start gap-5 md:flex-row">
             <div className="flex flex-col">
-              <div className="flex mx-3">
+              <div className="grid grid-cols-2 mx-3 md:flex md:grid-cols-0">
                 {types.map((type) => (
                   <div key={type.key} className="relative">
                     <p
                       onClick={() => setActive(type.key)}
-                      className={`px-5 py-2 transition-all rounded-t w-fit cursor-pointer
+                      className={`px-5 py-2 transition-all rounded-t w-full text-center md:w-fit cursor-pointer
               ${active === type.key ? 'text-primary' : 'text-gray-400'}
               hover:bg-primary/20`}
                     >
@@ -220,20 +221,27 @@ function Steps() {
               />
             </div>
             {/* swap icon */}
-            <div
-              className="p-3 transition-all rounded-full cursor-pointer hover:bg-gray-300 h-fit"
-              onClick={() => InvertValue()}
-            >
-              <img width={20} className="rotate-90" src="/swap.svg" alt="img" />
+            <div className="flex justify-center w-full md:block md:w-fit">
+              <div
+                className="p-3 transition-all rounded-full cursor-pointer hover:bg-gray-300 h-fit"
+                onClick={() => InvertValue()}
+              >
+                <img
+                  width={20}
+                  className="rotate-90"
+                  src="/swap.svg"
+                  alt="img"
+                />
+              </div>
             </div>
             {/* gap */}
             <div className="flex flex-col">
-              <div className="flex mx-3">
+              <div className="grid grid-cols-2 mx-3 md:flex md:grid-cols-0">
                 {types.map((type) => (
                   <div key={type.key} className="relative">
                     <p
                       onClick={() => setTarget(type.key)}
-                      className={`px-5 py-2 transition-all rounded-t w-fit cursor-pointer
+                      className={`px-5 py-2 transition-all rounded-t w-full text-center md:w-fit cursor-pointer
               ${target === type.key ? 'text-primary' : 'text-gray-400'}
               hover:bg-primary/20`}
                     >
