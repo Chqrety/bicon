@@ -217,7 +217,11 @@ function Steps() {
                 placeholder={activeType?.placeholder || 'Enter value...'}
                 variant="bordered"
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={(e) => {
+                  const newValue = e.target.value
+                  if (active === 'binary' && /[^01]/.test(newValue)) return
+                  setInputValue(newValue)
+                }}
               />
             </div>
             {/* swap icon */}
