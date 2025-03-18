@@ -34,7 +34,7 @@ export default function Maintance() {
           <motion.span
             key={index}
             variants={letterVariants}
-            className={`inline-block ${char === ' ' ? 'w-6' : ''}`}
+            className={`inline-block ${char === ' ' ? 'w-4 lg:w-6' : ''}`}
           >
             {char}
           </motion.span>
@@ -51,7 +51,7 @@ export default function Maintance() {
           <motion.span
             key={index}
             variants={letterVariants}
-            className={`inline-block ${char === ' ' ? 'w-6' : ''}`}
+            className={`inline-block ${char === ' ' ? 'w-4 lg:w-6' : ''}`}
           >
             {char}
           </motion.span>
