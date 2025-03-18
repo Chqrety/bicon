@@ -1,7 +1,8 @@
-import { Button, Textarea } from '@heroui/react'
-import * as motion from 'motion/react-client'
-import FlippingText from '../components/FlippingText'
-import { useState } from 'react'
+import { Button, Textarea } from '@heroui/react';
+import { motion } from 'framer-motion';
+import FlippingText from '../../components/FlippingText';
+import { useState } from 'react';
+import ModalVersion from '../../components/ModalVersion';
 
 export const types = [
   { key: 'binary', label: 'Binary', placeholder: 'e.g. 101010' },
@@ -9,148 +10,111 @@ export const types = [
   { key: 'octal', label: 'Octal', placeholder: 'e.g. 52' },
   { key: 'hexadecimal', label: 'Hexadecimal', placeholder: 'e.g. 2A' },
   { key: 'text', label: 'Text', placeholder: 'e.g. Hello' },
-]
-
-function Steps() {
-  const [active, setActive] = useState<string | null>('binary')
-  const [target, setTarget] = useState<string | null>('decimal')
-  const [inputValue, setInputValue] = useState('')
+];
+function App() {
+  const [active, setActive] = useState<string | null>('binary');
+  const [target, setTarget] = useState<string | null>('decimal');
+  const [inputValue, setInputValue] = useState('');
 
   // Fungsi utama untuk mengonversi angka
-  const convertValue = (value: string, from: string, to: string) => {
-    if (!value || from === to)
-      return { result: value, steps: [`No conversion needed`] }
+  const convertValue = (value: string, from: string, to: string): string => {
+    if (!value || from === to) return value;
 
-    let decimalValue: number
-    let steps: string[] = []
+    let decimalValue: number;
 
     try {
-      const cleanedInput = value.replace(/\s+/g, '')
-
+      const cleanedInput = value.replace(/\s+/g, ''); // Hapus semua spasi
       if (from === 'binary') {
-        decimalValue = parseInt(cleanedInput, 2)
-        steps.push(`Binary to Decimal: ${cleanedInput} → ${decimalValue}`)
-
         if (to === 'text') {
-          const textResult =
+          return (
             cleanedInput
-              .match(/.{1,8}/g)
-              ?.map((byte) => {
-                const char = String.fromCharCode(parseInt(byte, 2))
-                steps.push(`Binary ${byte} → ASCII '${char}'`)
-                return char
-              })
+              .match(/.{1,8}/g) // Pecah menjadi 8-bit
+              ?.map((byte) => String.fromCharCode(parseInt(byte, 2))) // Konversi ke karakter ASCII
               .join('') || 'Invalid Binary'
-          return { result: textResult, steps }
+          );
         }
+        decimalValue = parseInt(cleanedInput, 2);
       } else if (from === 'decimal') {
-        decimalValue = parseInt(value, 10)
-        steps.push(`Decimal: ${value}`)
-
         if (to === 'text') {
-          const textResult = value
-            .split(/\s+/)
-            .map((num) => {
-              const char = String.fromCharCode(parseInt(num, 10))
-              steps.push(`Decimal ${num} → ASCII '${char}'`)
-              return char
-            })
-            .join('')
-          return { result: textResult, steps }
+          return value
+            .split(/\s+/) // Pisah angka jika lebih dari satu
+            .map((num) => String.fromCharCode(parseInt(num, 10))) // Konversi ke ASCII
+            .join('');
         }
+        decimalValue = parseInt(value, 10);
       } else if (from === 'octal') {
-        decimalValue = parseInt(value, 8)
-        steps.push(`Octal to Decimal: ${value} → ${decimalValue}`)
-
         if (to === 'text') {
-          const textResult = value
+          return value
             .split(/\s+/)
-            .map((num) => {
-              const char = String.fromCharCode(parseInt(num, 8))
-              steps.push(`Octal ${num} → ASCII '${char}'`)
-              return char
-            })
-            .join('')
-          return { result: textResult, steps }
+            .map((num) => String.fromCharCode(parseInt(num, 8)))
+            .join('');
         }
+        decimalValue = parseInt(value, 8);
       } else if (from === 'hexadecimal') {
-        decimalValue = parseInt(cleanedInput, 16)
-        steps.push(`Hexadecimal to Decimal: ${cleanedInput} → ${decimalValue}`)
-
         if (to === 'text') {
-          const textResult =
+          return (
             cleanedInput
-              .match(/.{1,2}/g)
-              ?.map((hex) => {
-                const char = String.fromCharCode(parseInt(hex, 16))
-                steps.push(`Hexadecimal ${hex} → ASCII '${char}'`)
-                return char
-              })
+              .match(/.{1,2}/g) // Pecah menjadi dua karakter per byte
+              ?.map((hex) => String.fromCharCode(parseInt(hex, 16)))
               .join('') || 'Invalid Hexadecimal'
-          return { result: textResult, steps }
+          );
         }
+        decimalValue = parseInt(cleanedInput, 16);
       } else if (from === 'text') {
-        steps.push(`Text: '${value}'`)
-        const conversions = {
-          binary: (char: string) =>
-            char.charCodeAt(0).toString(2).padStart(8, '0'),
-          decimal: (char: string) => char.charCodeAt(0).toString(10),
-          octal: (char: string) => char.charCodeAt(0).toString(8),
-          hexadecimal: (char: string) =>
-            char.charCodeAt(0).toString(16).padStart(2, '0'),
-        }
-
-        const textResult = value
-          .split('')
-          .map((char) => {
-            const converted = conversions[to as keyof typeof conversions](char)
-            steps.push(`'${char}' → ${to} ${converted}`)
-            return converted
-          })
-          .join(' ')
-
-        return { result: textResult, steps }
+        return to === 'binary'
+          ? value
+              .split('')
+              .map((char) => char.charCodeAt(0).toString(2).padStart(8, '0'))
+              .join(' ')
+          : to === 'decimal'
+          ? value
+              .split('')
+              .map((char) => char.charCodeAt(0).toString(10))
+              .join(' ')
+          : to === 'octal'
+          ? value
+              .split('')
+              .map((char) => char.charCodeAt(0).toString(8))
+              .join(' ')
+          : to === 'hexadecimal'
+          ? value
+              .split('')
+              .map((char) => char.charCodeAt(0).toString(16).padStart(2, '0'))
+              .join(' ')
+          : value;
       } else {
-        return { result: 'Invalid Input', steps }
+        return 'Invalid Input';
       }
 
-      const conversions = {
-        binary: decimalValue.toString(2),
-        decimal: decimalValue.toString(10),
-        octal: decimalValue.toString(8),
-        hexadecimal: decimalValue.toString(16),
-      }
-
-      steps.push(
-        `Decimal to ${to}: ${decimalValue} → ${
-          conversions[to as keyof typeof conversions]
-        }`,
-      )
-      return { result: conversions[to as keyof typeof conversions], steps }
+      if (to === 'binary') return decimalValue.toString(2);
+      if (to === 'decimal') return decimalValue.toString(10);
+      if (to === 'octal') return decimalValue.toString(8);
+      if (to === 'hexadecimal') return decimalValue.toString(16);
     } catch (error) {
-      return { result: 'Error', steps: ['An error occurred'] }
+      return 'Error';
     }
-  }
+
+    return 'Invalid Conversion';
+  };
 
   const scrollToConvert = () => {
-    const target = document.getElementById('convert')
+    const target = document.getElementById('convert');
     if (target) {
-      target.scrollIntoView({ behavior: 'smooth' })
+      target.scrollIntoView({ behavior: 'smooth' });
     }
-  }
+  };
 
   const InvertValue = () => {
-    setActive(target)
-    setTarget(active)
-  }
+    setActive(target);
+    setTarget(active);
+  };
 
-  const activeType = types.find((type) => type.key === active)
-  const conversion = convertValue(inputValue, active || '', target || '')
+  const activeType = types.find((type) => type.key === active);
 
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen gap-5 ">
-        <div className="flex flex-col items-center gap-2 px-10 text-primary">
+        <div className="flex flex-col items-center gap-2 text-primary">
           <FlippingText />
           <motion.p
             initial={{ opacity: 0, y: 100 }}
@@ -164,7 +128,7 @@ function Steps() {
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.5 }}
-            className="text-sm text-center md:text-base"
+            className="text-xs text-center lg:text-base"
           >
             is a simple website to convert between Binary, Decimal, Octal,
             Hexadecimal, and Text
@@ -174,14 +138,16 @@ function Steps() {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1, duration: 0.5 }}
+          className="flex gap-2"
         >
+          <ModalVersion />
           <Button color="primary" onPress={scrollToConvert}>
             Let's Calculate
           </Button>
         </motion.div>
       </div>
       <div className="flex flex-col min-h-[70vh] items-center" id="convert">
-        <div className="flex flex-col items-center justify-center w-full max-w-sm md:max-w-screen-xl py-20 bg-[#FBFBFB] rounded-xl">
+        <div className="flex flex-col items-center justify-center w-full max-w-screen-xl py-20 bg-white rounded-xl">
           <p className="mb-10 text-lg font-semibold text-center">
             What you want to convert?
           </p>
@@ -218,9 +184,9 @@ function Steps() {
                 variant="bordered"
                 value={inputValue}
                 onChange={(e) => {
-                  const newValue = e.target.value
-                  if (active === 'binary' && /[^01]/.test(newValue)) return
-                  setInputValue(newValue)
+                  const newValue = e.target.value;
+                  if (active === 'binary' && /[^01\s]/.test(newValue)) return;
+                  setInputValue(newValue);
                 }}
               />
             </div>
@@ -270,21 +236,14 @@ function Steps() {
                 variant="flat"
                 className="max-w-lg"
                 placeholder="..."
-                value={
-                  convertValue(inputValue, active || '', target || '').result
-                }
+                value={convertValue(inputValue, active || '', target || '')}
               />
-              <ul className="mt-2 text-sm text-gray-500">
-                {conversion.steps.map((step, index) => (
-                  <li key={index}>{step}</li>
-                ))}
-              </ul>
             </div>
           </div>
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default Steps
+export default App;
