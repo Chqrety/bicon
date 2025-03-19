@@ -98,16 +98,43 @@ function Steps() {
         if (!(to === 'text')) {
           const reversedHex = cleanedInput.split('').reverse();
           let stepDetails: string[] = [];
+          let decimalResult = 0;
 
           reversedHex.forEach((digit, index) => {
-            const decimalValue = parseInt(digit, 16); // Konversi digit Hexa ke Desimal
-            stepDetails.push(`(${decimalValue} × 16^${index})`);
+            const decimalValue = parseInt(digit, 16);
+            decimalResult += decimalValue * Math.pow(16, index);
+
+            // Menampilkan huruf heksadesimal dalam bentuk aslinya (A-F tidak diubah)
+            const displayDigit = /^[A-Fa-f]$/.test(digit)
+              ? digit.toUpperCase()
+              : digit;
+            stepDetails.push(`(${displayDigit} × 16^${index})`);
           });
 
-          steps.push(`${stepDetails.join(' + ')} = ${decimalValue}`);
+          steps.push(`${stepDetails.join(' + ')} = ${decimalResult}`);
           steps.push(
-            `Hexadecimal to Decimal: ${cleanedInput} → ${decimalValue}`,
+            `Hexadecimal to Decimal: ${cleanedInput} → ${decimalResult}`,
           );
+
+          // return { result: decimalResult, steps };
+          // const reversedHex = cleanedInput.split('').reverse();
+          // let stepDetails: string[] = [];
+          // let decimalResult = 0;
+
+          // reversedHex.forEach((digit, index) => {
+          //   if (!isNaN(parseInt(digit))) {
+          //     const decimalValue = parseInt(digit, 16);
+          //     decimalResult += decimalValue * Math.pow(16, index);
+          //     stepDetails.push(`(${digit} × 16^${index})`);
+          //   } else {
+          //     stepDetails.push(`(${digit} × 16^${index})`);
+          //   }
+          // });
+
+          // steps.push(`${stepDetails.join(' + ')} = ${decimalResult}`);
+          // steps.push(
+          //   `Hexadecimal to Decimal: ${cleanedInput} → ${decimalResult}`,
+          // );
         } else {
           return {
             result: value
@@ -165,11 +192,15 @@ function Steps() {
         while (quotient > 0) {
           let remainder = quotient % 2;
           binaryDigits.push(remainder);
-          binarySteps.push(
-            `(${quotient} ÷ 2 = ${Math.floor(
-              quotient / 2,
-            )}, remainder = ${remainder})`,
-          );
+
+          if (quotient !== 1) {
+            binarySteps.push(
+              `(${quotient} ÷ 2 = ${Math.floor(
+                quotient / 2,
+              )}, remainder = ${remainder})`,
+            );
+          }
+
           quotient = Math.floor(quotient / 2);
         }
 
@@ -191,11 +222,15 @@ function Steps() {
         while (quotient > 0) {
           let remainder = quotient % 8;
           octalDigits.push(remainder);
-          octalSteps.push(
-            `(${quotient} ÷ 8 = ${Math.floor(
-              quotient / 8,
-            )}, remainder = ${remainder})`,
-          );
+
+          if (quotient >= 8) {
+            octalSteps.push(
+              `(${quotient} ÷ 8 = ${Math.floor(
+                quotient / 8,
+              )}, remainder = ${remainder})`,
+            );
+          }
+
           quotient = Math.floor(quotient / 8);
         }
 
@@ -211,26 +246,27 @@ function Steps() {
         to === 'hexadecimal'
       ) {
         let quotient = decimalValue;
-        let hexSteps: string[] = [];
-        let hexDigits: string[] = [];
-        const hexMap = '0123456789ABCDEF'; // Untuk mendapatkan nilai hexa
+        let binarySteps: string[] = [];
+        let binaryDigits: number[] = [];
 
-        while (quotient > 0) {
-          let remainder = quotient % 16;
-          hexDigits.push(hexMap[remainder]);
-          hexSteps.push(
-            `(${quotient} ÷ 16 = ${Math.floor(quotient / 16)}, remainder = ${
-              hexMap[remainder]
-            })`,
+        while (quotient > 1) {
+          let remainder = quotient % 2;
+          binaryDigits.push(remainder);
+          binarySteps.push(
+            `(${quotient} ÷ 2 = ${Math.floor(
+              quotient / 2,
+            )}, remainder = ${remainder})`,
           );
-          quotient = Math.floor(quotient / 16);
+          quotient = Math.floor(quotient / 2);
         }
 
-        let hexResult = hexDigits.reverse().join('');
-        steps.push(...hexSteps);
-        steps.push(`Decimal to Hexadecimal: ${decimalValue} → ${hexResult}`);
+        binaryDigits.push(quotient);
 
-        return { result: hexResult, steps };
+        let binaryResult = binaryDigits.reverse().join('');
+        steps.push(...binarySteps);
+        steps.push(`Decimal to Binary: ${decimalValue} → ${binaryResult}`);
+
+        return { result: binaryResult, steps };
       }
       if (
         !(
