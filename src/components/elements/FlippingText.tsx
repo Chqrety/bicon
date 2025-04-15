@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion'
+import { motion } from 'framer-motion';
 
-const text = 'BICON'.split('')
+const text = 'BICON'.split('');
 
 const containerVariants = {
   hidden: { opacity: 1 },
@@ -8,7 +8,7 @@ const containerVariants = {
     opacity: 1,
     transition: { staggerChildren: 0.2 },
   },
-}
+};
 
 const letterVariants = {
   hidden: { rotateX: 90, opacity: 0 },
@@ -17,7 +17,7 @@ const letterVariants = {
     opacity: 1,
     transition: { duration: 0.3, ease: 'easeInOut' },
   },
-}
+};
 
 export default function FlippingText() {
   return (
@@ -37,5 +37,5 @@ export default function FlippingText() {
         </motion.span>
       ))}
     </motion.div>
-  )
+  );
 }

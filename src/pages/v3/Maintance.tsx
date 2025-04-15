@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import ModalVersion from '../../components/ModalVersion';
+import ModalVersion from '../../components/elements/ModalVersion';
 
 export default function Maintance() {
   const text1 = [...'Sabar Bos'];

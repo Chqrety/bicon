@@ -1,8 +1,8 @@
 import { Button, Textarea } from '@heroui/react';
 import { motion } from 'framer-motion';
-import FlippingText from '../../components/FlippingText';
+import FlippingText from '../../components/elements/FlippingText';
 import { useState } from 'react';
-import ModalVersion from '../../components/ModalVersion';
+import ModalVersion from '../../components/elements/ModalVersion';
 
 export const types = [
   { key: 'binary', label: 'Binary', placeholder: 'e.g. 101010' },
@@ -115,26 +115,6 @@ function Steps() {
           steps.push(
             `Hexadecimal to Decimal: ${cleanedInput} → ${decimalResult}`,
           );
-
-          // return { result: decimalResult, steps };
-          // const reversedHex = cleanedInput.split('').reverse();
-          // let stepDetails: string[] = [];
-          // let decimalResult = 0;
-
-          // reversedHex.forEach((digit, index) => {
-          //   if (!isNaN(parseInt(digit))) {
-          //     const decimalValue = parseInt(digit, 16);
-          //     decimalResult += decimalValue * Math.pow(16, index);
-          //     stepDetails.push(`(${digit} × 16^${index})`);
-          //   } else {
-          //     stepDetails.push(`(${digit} × 16^${index})`);
-          //   }
-          // });
-
-          // steps.push(`${stepDetails.join(' + ')} = ${decimalResult}`);
-          // steps.push(
-          //   `Hexadecimal to Decimal: ${cleanedInput} → ${decimalResult}`,
-          // );
         } else {
           return {
             result: value

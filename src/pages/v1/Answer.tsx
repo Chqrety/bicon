@@ -1,8 +1,8 @@
 import { Button, Textarea } from '@heroui/react';
 import { motion } from 'framer-motion';
-import FlippingText from '../../components/FlippingText';
+import FlippingText from '../../components/elements/FlippingText';
 import { useState } from 'react';
-import ModalVersion from '../../components/ModalVersion';
+import ModalVersion from '../../components/elements/ModalVersion';
 
 export const types = [
   { key: 'binary', label: 'Binary', placeholder: 'e.g. 101010' },

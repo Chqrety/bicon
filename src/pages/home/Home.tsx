@@ -1,7 +1,7 @@
 // import React from 'react'
 import { motion } from 'framer-motion';
-import FlippingText from '../../components/FlippingText';
-import ModalVersion from '../../components/ModalVersion';
+import FlippingText from '../../components/elements/FlippingText';
+import ModalVersion from '../../components/elements/ModalVersion';
 
 export default function Home() {
   return (
