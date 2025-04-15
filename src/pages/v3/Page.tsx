@@ -16,7 +16,6 @@ export const types = [
   { key: 'decimal', label: 'Decimal', placeholder: 'e.g. 42' },
   { key: 'octal', label: 'Octal', placeholder: 'e.g. 52' },
   { key: 'hexadecimal', label: 'Hexadecimal', placeholder: 'e.g. 2A' },
-  { key: 'text', label: 'Text', placeholder: 'e.g. Hello' },
 ];
 
 export const arithmetics = [
